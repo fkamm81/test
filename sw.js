@@ -1,5 +1,4 @@
-
-const CACHE_NAME = 'avec-amour-v1';
+const CACHE_NAME = 'avec-amour-v2';
 const ASSETS = [
   './',
   './index.html',
@@ -23,7 +22,6 @@ self.addEventListener('activate', event => {
   self.clients.claim();
 });
 
-// Network-first for dynamic requests; cache-first for app shell
 self.addEventListener('fetch', event => {
   const { request } = event;
   const url = new URL(request.url);
