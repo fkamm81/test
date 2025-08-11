@@ -1,4 +1,4 @@
-const CACHE_NAME = 'avec-amour-v2';
+const CACHE_NAME = 'avec-amour-v3';
 const ASSETS = [
   './',
   './index.html',
