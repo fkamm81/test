@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Parlez Avec Amour — French Trainer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+
+  <meta name="theme-color" content="#3f3cbb"/>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+
+</head>
+<body>
+  <div id="app">
+    <header class="app-header">
+      <div class="brand">
+        <div class="logo-heart" aria-hidden="true">♥</div>
+        <div>
+          <h1>Parlez Avec Amour</h1>
+          <p class="subtitle">A delightful way to learn French, made for you 💫</p>
+        </div>
+      </div>
+      <div class="stats">
+        <div class="stat" title="Daily XP">
+          <svg viewBox="0 0 120 120" class="ring" aria-hidden="true">
+            <circle cx="60" cy="60" r="54" class="ring-bg"></circle>
+            <circle cx="60" cy="60" r="54" class="ring-fg" id="xpRing"></circle>
+          </svg>
+          <div class="stat-label">
+            <strong id="xpToday">0</strong><span>XP today</span>
+          </div>
+        </div>
+        <div class="stat" title="Current streak">
+          <div class="flame" aria-hidden="true">🔥</div>
+          <div class="stat-label">
+            <strong id="streak">0</strong><span>day streak</span>
+          </div>
+        </div>
+        <div class="stat" title="Level">
+          <div class="medal" aria-hidden="true">🏅</div>
+          <div class="stat-label">
+            <strong id="level">1</strong><span>level</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <nav class="tabs" role="tablist" aria-label="Activities">
+      <button class="tab active" data-tab="flashcards" role="tab" aria-selected="true">Flashcards</button>
+      <button class="tab" data-tab="quiz" role="tab" aria-selected="false">Quiz</button>
+      <button class="tab" data-tab="listening" role="tab" aria-selected="false">Listening</button>
+      <button class="tab" data-tab="speaking" role="tab" aria-selected="false">Speaking</button>
+      <button class="tab" data-tab="matching" role="tab" aria-selected="false">Matching</button>
+      <button class="tab" data-tab="writing" role="tab" aria-selected="false">Writing</button>
+      <button class="tab" data-tab="progress" role="tab" aria-selected="false">Progress</button>
+      <button class="tab" data-tab="settings" role="tab" aria-selected="false">Settings</button>
+    </nav>
+
+    <main class="panels">
+      <!-- FLASHCARDS -->
+      <section class="panel active" id="flashcards" role="tabpanel">
+        <div class="deck-toolbar">
+          <label>Deck:
+            <select id="deckSelect"></select>
+          </label>
+          <button id="shuffleDeck" class="ghost">Shuffle</button>
+          <button id="speakCard" class="ghost" title="Speak (fr-FR)">🔊</button>
+        </div>
+        <div class="card" id="flashcard" tabindex="0" aria-live="polite" aria-label="Flashcard, press space to flip">
+          <div class="front">
+            <div class="lang-chip">FR</div>
+            <h2 id="cardFront">bonjour</h2>
+          </div>
+          <div class="back">
+            <div class="lang-chip">EN</div>
+            <h3 id="cardBack">hello</h3>
+            <p id="cardHint" class="hint">Hint example sentence</p>
+          </div>
+        </div>
+        <div class="fc-actions">
+          <button class="btn again" data-grade="again">Again</button>
+          <button class="btn good" data-grade="good">Good</button>
+          <button class="btn easy" data-grade="easy">Easy</button>
+        </div>
+        <p class="microcopy">Tip: Space = flip • 1/2/3 = Again/Good/Easy</p>
+      </section>
+
+      <!-- QUIZ -->
+      <section class="panel" id="quiz" role="tabpanel">
+        <div class="quiz-wrap">
+          <div class="quiz-q">
+            <div class="chips">
+              <span class="chip" id="quizDeckChip">Deck</span>
+              <span class="chip" id="quizModeChip">FR → EN</span>
+            </div>
+            <h2 id="quizQuestion">Le mot « bonjour » signifie…</h2>
+          </div>
+          <div class="quiz-options" id="quizOptions"></div>
+          <div class="quiz-controls">
+            <button id="nextQuestion" class="primary">Next</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- LISTENING -->
+      <section class="panel" id="listening" role="tabpanel">
+        <div class="listen-wrap">
+          <p>Click to hear a French word. Type what you heard.</p>
+          <div class="listen-controls">
+            <button id="playAudio" class="primary">Play</button>
+            <select id="listeningDeck"></select>
+          </div>
+          <input id="listenInput" type="text" placeholder="Type in French…" autocomplete="off" />
+          <button id="checkListen" class="secondary">Check</button>
+          <div id="listenFeedback" class="feedback" aria-live="polite"></div>
+        </div>
+      </section>
+
+      <!-- SPEAKING -->
+      <section class="panel" id="speaking" role="tabpanel">
+        <div class="speak-wrap">
+          <p>Say the French word shown. (Requires microphone + Chrome/Edge)</p>
+          <div class="speak-card">
+            <h2 id="speakPrompt">bonjour</h2>
+            <button id="startSpeak" class="primary">🎙️ Start</button>
+          </div>
+          <div id="speakResult" class="feedback" aria-live="polite"></div>
+        </div>
+      </section>
+
+      <!-- MATCHING -->
+      <section class="panel" id="matching" role="tabpanel">
+        <div class="match-wrap">
+          <div class="controls-row">
+            <select id="matchDeck"></select>
+            <button id="newMatch" class="ghost">New round</button>
+          </div>
+          <div class="match-grid">
+            <div class="col" id="matchColFr" aria-label="French terms"></div>
+            <div class="col" id="matchColEn" aria-label="English terms"></div>
+          </div>
+          <div id="matchFeedback" class="feedback" aria-live="polite"></div>
+        </div>
+      </section>
+
+      <!-- WRITING -->
+      <section class="panel" id="writing" role="tabpanel">
+        <div class="write-wrap">
+          <div class="controls-row">
+            <select id="writeDeck"></select>
+            <button id="newWrite" class="ghost">New prompt</button>
+          </div>
+          <p class="prompt">Translate into French:</p>
+          <h2 id="writePrompt">hello</h2>
+          <input id="writeInput" type="text" placeholder="Type in French…" autocomplete="off" />
+          <button id="checkWrite" class="secondary">Check</button>
+          <div id="writeFeedback" class="feedback" aria-live="polite"></div>
+        </div>
+      </section>
+
+      <!-- PROGRESS -->
+      <section class="panel" id="progress" role="tabpanel">
+        <div class="progress-wrap">
+          <h2>Your progress</h2>
+          <div class="progress-cards" id="progressCards"></div>
+          <canvas id="xpChart" height="200" aria-label="XP chart"></canvas>
+          <div class="achievements" id="achievements"></div>
+        </div>
+      </section>
+
+      <!-- SETTINGS -->
+      <section class="panel" id="settings" role="tabpanel">
+        <div class="settings-wrap">
+          <h2>Settings</h2>
+          <div class="setting">
+            <label for="themeSelect">Theme</label>
+            <select id="themeSelect">
+              <option value="provence">Provence Lavender</option>
+              <option value="noir">Midnight Noir</option>
+              <option value="cafe">Café Crème</option>
+            </select>
+          </div>
+          <div class="setting">
+            <label for="nameInput">Your name (for stats)</label>
+            <input id="nameInput" type="text" placeholder="e.g., Alex" />
+          </div>
+          <div class="setting">
+            <label><input type="checkbox" id="hardMode" /> Hard mode (stricter grading)</label>
+          </div>
+          <div class="setting">
+            <label for="packSelect">Active word packs</label>
+            <div class="packs" id="packs"></div>
+          </div>
+          <button id="exportBtn" class="secondary">Export progress</button>
+          <input type="file" id="importFile" accept="application/json" style="display:none" />
+          <button id="importBtn" class="ghost">Import progress</button>
+        </div>
+      </section>
+    </main>
+
+    <footer class="app-footer">
+      <span>Built with ❤️ — Works offline, all data stays in your browser.</span>
+    </footer>
+  </div>
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('./sw.js').catch(function(err){ console.log('SW reg failed:', err); });
+      });
+    }
+  </script>
+</body>
+</html>
+
